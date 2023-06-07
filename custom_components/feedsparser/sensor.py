@@ -47,8 +47,8 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 })
 
 
-@asyncio.coroutine
-def async_setup_platform(
+"""@asyncio.coroutine"""
+async def async_setup_platform(
     hass: HomeAssistant,
     config: ConfigType,
     async_add_devices: AddEntitiesCallback,
@@ -112,7 +112,7 @@ class FeedsParserSensor(SensorEntity):
 
                     if not title or title in titles:
                         continue
-                    
+
                     if len(self._entries) > 0:
                         (highest_title, highest) = process.extractOne(title, titles)
                         if highest > 75:
@@ -128,8 +128,8 @@ class FeedsParserSensor(SensorEntity):
                                     skip_title = True
                                     # _LOGGER.error("%s found in: %s"  % (test_word, title))
                                     continue
-                        
-                        if skip_title != True:    
+
+                        if skip_title != True:
                             entry_value = {}
                             titles.append(title)
 
@@ -144,7 +144,7 @@ class FeedsParserSensor(SensorEntity):
                             count += 1
                             entry_value['title'] = title
 
-                            self._entries.append(entry_value) 
+                            self._entries.append(entry_value)
         self._attr_state = (
             len(self._entries)
         )
