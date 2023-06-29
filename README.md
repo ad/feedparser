@@ -12,9 +12,10 @@ sensor:
   name: news
   show_topn: 3
   feeds_url:
-    - 'https://news.yandex.ru/index.rss'
-    - 'https://news.yandex.ru/incident.rss'
-    - 'https://news.yandex.ru/Saint_Petersburg/index.rss'
+    - https://news.ru/rss/category/post/russia/
+    - https://news.ru/rss/category/post/world/
+    - https://news.ru/rss/category/post/incidents/
+    - https://news.ru/rss/category/post/economics/
   date_format: '%a, %b %d %I:%M %p'
   inclusions:
     - title
@@ -22,7 +23,9 @@ sensor:
     - description
     - pubDate
   exclusions:
+    - guid
     - language
+    - category
   stop_words:
     - drugs
     - sex
@@ -37,10 +40,12 @@ key | description
 **name (Required)** | Name your feed
 **feeds_url (Required)** | The RSS feed URLs
 **show_topn (Required)** | How many news will be shown per feed
+**local_time (Optional)** | Whether to convert date into local time **Default** false
 **stop_words (Optional)** | List of words for which titles will be excluded
 **date_format (Optional)** | strftime date format for date strings **Default** `%a, %b %d %I:%M %p`
 **inclusions (Optional)** | List of fields to include from populating the list
 **exclusions (Optional)** | List of fields to exclude from populating the list
+**scan_intervall (Optional)** |	Update interval in hours
 
 ***
 

@@ -1,10 +1,10 @@
 {
   "domain": "feedsparser",
   "name": "Feedsparser",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "documentation": "https://github.com/ad/feedsparser/blob/master/README.md",
   "dependencies": [],
   "codeowners": ["@ad", "@iantrich"],
-  "requirements": ["feedparser==6.0.8", "fuzzywuzzy"],
+  "requirements": ["feedparser==6.0.10", "fuzzywuzzy"],
   "iot_class": "cloud_polling"
 }

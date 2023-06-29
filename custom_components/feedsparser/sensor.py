@@ -16,10 +16,11 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 from fuzzywuzzy import process
+import homeassistant.util.dt as dt
 
 import feedparser
 
-__version__ = "0.1.3"
+__version__ = "0.1.5"
 _LOGGER = logging.getLogger(__name__)
 
 COMPONENT_REPO = 'https://github.com/ad/feedsparser'
@@ -28,6 +29,7 @@ REQUIREMENTS = ["feedparser", 'fuzzywuzzy']
 
 CONF_FEEDS_URL = "feeds_url"
 CONF_DATE_FORMAT = "date_format"
+CONF_LOCAL_TIME = "local_time"
 CONF_INCLUSIONS = "inclusions"
 CONF_EXCLUSIONS = "exclusions"
 CONF_SHOW_TOPN = "show_topn"
@@ -38,6 +40,7 @@ DEFAULT_SCAN_INTERVAL = timedelta(hours=1)
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_NAME): cv.string,
     vol.Required(CONF_FEEDS_URL, default=[]): vol.All(cv.ensure_list, [cv.string]),
+    vol.Optional(CONF_LOCAL_TIME, default=False): cv.boolean,
     vol.Required(CONF_SHOW_TOPN, default=3): cv.positive_int,
     vol.Required(CONF_DATE_FORMAT, default='%a, %b %d %I:%M %p'): cv.string,
     vol.Optional(CONF_STOP_WORDS, default=[]): vol.All(cv.ensure_list, [cv.string]),
@@ -59,6 +62,7 @@ async def async_setup_platform(
             FeedsParserSensor(
                 feeds=config[CONF_FEEDS_URL],
                 name=config[CONF_NAME],
+                local_time=config[CONF_LOCAL_TIME],
                 date_format=config[CONF_DATE_FORMAT],
                 show_topn=config[CONF_SHOW_TOPN],
                 stop_words=config[CONF_STOP_WORDS],
@@ -77,6 +81,7 @@ class FeedsParserSensor(SensorEntity):
         feeds: str,
         name: str,
         date_format: str,
+        local_time: bool,
         show_topn: str,
         stop_words: list,
         exclusions: str,
@@ -88,6 +93,7 @@ class FeedsParserSensor(SensorEntity):
         self._attr_icon = "mdi:rss"
         self._date_format = date_format
         self._show_topn = show_topn
+        self._local_time = local_time
         self._stop_words = list(map(lambda x:x.lower(), stop_words))
         self._inclusions = inclusions
         self._exclusions = exclusions
@@ -138,7 +144,10 @@ class FeedsParserSensor(SensorEntity):
                                     continue
 
                                 if key in ['published', 'updated', 'created', 'expired']:
-                                    value = parser.parse(value).strftime(self._date_format)
+                                    value = parser.parse(value)
+                                    if self._local_time:
+                                        value = dt.as_local(value)
+                                    value = value.strftime(self._date_format)
 
                                 entry_value[key] = value
                             count += 1
