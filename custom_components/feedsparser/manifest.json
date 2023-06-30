@@ -5,6 +5,6 @@
   "documentation": "https://github.com/ad/feedsparser/blob/master/README.md",
   "dependencies": [],
   "codeowners": ["@ad", "@iantrich"],
-  "requirements": ["feedparser==6.0.10", "fuzzywuzzy"],
+  "requirements": ["feedparser==6.0.8", "fuzzywuzzy"],
   "iot_class": "cloud_polling"
 }
