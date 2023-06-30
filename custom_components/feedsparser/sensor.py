@@ -20,7 +20,7 @@ import homeassistant.util.dt as dt
 
 import feedparser
 
-__version__ = "0.1.5"
+__version__ = "0.1.6"
 _LOGGER = logging.getLogger(__name__)
 
 COMPONENT_REPO = 'https://github.com/ad/feedsparser'
@@ -78,25 +78,25 @@ async def async_setup_platform(
 class FeedsParserSensor(SensorEntity):
     def __init__(
         self,
-        feeds: str,
+        feeds: list,
         name: str,
         date_format: str,
         local_time: bool,
         show_topn: str,
         stop_words: list,
-        exclusions: str,
-        inclusions: str,
+        exclusions: list,
+        inclusions: list,
         scan_interval: int,
     ) -> None:
-        self._feeds = feeds
+        self._feeds = list(map(lambda x:x.lower(), feeds))
         self._attr_name = name
         self._attr_icon = "mdi:rss"
         self._date_format = date_format
         self._show_topn = show_topn
         self._local_time = local_time
         self._stop_words = list(map(lambda x:x.lower(), stop_words))
-        self._inclusions = inclusions
-        self._exclusions = exclusions
+        self._inclusions = list(map(lambda x:x.lower(), inclusions))
+        self._exclusions = list(map(lambda x:x.lower(), exclusions))
         self._scan_interval = scan_interval
         self._attr_state = None
         self._entries = []
